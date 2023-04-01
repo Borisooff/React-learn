@@ -16,6 +16,7 @@ class App extends Component {
                 { name: 'Stive R.', salary: 1100, increase: false, rise: true, id: 2 },
                 { name: 'Anna S.', salary: 1300, increase: false, rise: false, id: 3 },
             ],
+            term: '',
         }
         this.maxId = 3;
     }
@@ -39,64 +40,67 @@ class App extends Component {
         }
 
         this.maxId = this.maxId + 1;
-        this.setState(({data}) => {
+        this.setState(({ data }) => {
             const newArr = [...data, newItem];
-            return{
+            return {
                 data: newArr
             }
         });
     }
 
     onToggleProp = (id, prop) => {
-        this.setState(({data}) => ({
+        this.setState(({ data }) => ({
             data: data.map(empl => {
-                if(empl.id == id){
-                    return{ ...empl, [prop]: !empl[prop]}
+                if (empl.id == id) {
+                    return { ...empl, [prop]: !empl[prop] }
                 }
                 return empl;
             })
         }))
     }
 
-    // onToggleRise = (id) => {
-    //     this.setState(({data}) =>({
-    //         data: data.map(empl => {
-    //             if(empl.id == id){
-    //                 return {...empl, rise: !empl.rise};
-    //             }
-    //             return empl;
-    //         })
-    //     }))
-    // }
-
-
-    increaseCount = (data)=> {
+    increaseCount = (data) => {
         let count = 0;
         data.forEach(empl => {
-            if(empl.increase){
-                count = count + 1; 
+            if (empl.increase) {
+                count = count + 1;
             }
         })
         return count;
     }
 
+    searchEmpl = (items, search) => {
+        if (search.length === 0) {
+            return items
+        }
+        return items.filter(empl => {
+            return empl.name.indexOf(search) > -1
+        })
+    }
+
+    onUpdateSearch = (term)=> {
+        this.setState({term: term})
+    }
+
     render() {
+        const { data, term } = this.state;
         const employees = this.state.data.length;
         const increased = this.state.data.filter(item => item.increase).length;
+        const visibleData = this.searchEmpl(data, term);
 
         return (
             <div className="app">
-                <AppInfo 
-                employees={employees}
-                increased={increased} />
+                <AppInfo
+                    employees={employees}
+                    increased={increased} />
 
                 <div className="search__panel">
-                    <SearchPanal />
+                    <SearchPanal onUpdateSearch={this.onUpdateSearch}/>
                     <AppFilter />
                 </div>
 
                 <EmployeesList
-                    data={this.state.data}
+                    data={visibleData}
                     onDelete={this.deleteItem}
                     onToggleProp={this.onToggleProp} />
 
