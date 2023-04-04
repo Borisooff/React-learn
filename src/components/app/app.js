@@ -13,7 +13,7 @@ class App extends Component {
         this.state = {
             data: [
                 { name: 'John S.', salary: 1000, increase: false, rise: false, id: 1 },
-                { name: 'Stive R.', salary: 1100, increase: false, rise: true, id: 2 },
+                { name: 'Stive R.', salary: 1100, increase: false, rise: false, id: 2 },
                 { name: 'Anna S.', salary: 1300, increase: false, rise: false, id: 3 },
             ],
             term: '',
@@ -103,11 +103,11 @@ class App extends Component {
 
     // когда параметры поиска меняются в состояние поиска заносятся изменения 
     onUpdateFilter = (filter) => {
-        this.setState({filter})
+        this.setState({ filter })
     }
 
-
-    changeSalary = (id, salary) => {
+    // изменение зп
+    onChangeSalary = (id, salary) => {
         this.setState(({ data }) => ({
             data: data.map(empl => {
                 if (empl.id === id) {
@@ -117,6 +117,7 @@ class App extends Component {
             })
         }))
     }
+
 
     render() {
         const { data, term, filter } = this.state;
@@ -139,7 +140,7 @@ class App extends Component {
                     data={visibleData}
                     onDelete={this.deleteItem}
                     onToggleProp={this.onToggleProp}
-                    changeSalary={this.changeSalary} />
+                    onChangeSalary={this.onChangeSalary} />
 
                 <EmmployeesAddForm
                     onAdd={this.addItem} />
